@@ -1,3 +1,4 @@
+from pathlib import Path
 import hydra
 from omegaconf import DictConfig
 import pytorch_lightning as pl
@@ -24,6 +25,13 @@ def main(cfg: DictConfig):
     
     trainer = Trainer(**cfg.trainer)
     trainer.fit(model, data_module)
+
+    output_dir = Path(hydra.utils.to_absolute_path(cfg.output_dir))
+    output_dir.mkdir(parents=True, exist_ok=True)
+    model_path = output_dir / "model.ckpt"
+    trainer.save_checkpoint(model_path)
+    
+    print(f"Model saved to {model_path}")
 
 if __name__ == "__main__":
     main()

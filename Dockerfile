@@ -17,8 +17,21 @@ RUN pip install /python/dist/Swish-*.whl
 ENV CUDA_VISIBLE_DEVICES=""
 ENV TF_CPP_MIN_LOG_LEVEL=2
 ENV XLA_FLAGS="--xla_gpu_cuda_data_dir="
-COPY ./tests.py /python/tests.py
-RUN pip install --no-cache-dir tensorflow-cpu
-RUN pip install --no-cache-dir torch==2.5.0 --index-url https://download.pytorch.org/whl/cpu
+RUN pip install tensorflow-cpu
+RUN pip install torch==2.5.0 --index-url https://download.pytorch.org/whl/cpu
+RUN pip install omegaconf
+RUN pip install hydra-core
+RUN pip install pytorch_lightning
+RUN pip install dvc
 
-CMD ["python", "/python/tests.py"]
+COPY ./.dvc/ /python/.dvc
+COPY ./dvc_storage/ /python/dvc_storage
+COPY ./data.dvc /python/data.dvc
+COPY ./configs/ /python/configs
+COPY ./dataset.py /python/dataset.py
+COPY ./model.py /python/model.py
+COPY ./train.py /python/train.py
+
+RUN dvc pull
+
+ENTRYPOINT ["python", "train.py"]
