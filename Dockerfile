@@ -24,14 +24,15 @@ RUN pip install hydra-core
 RUN pip install pytorch_lightning
 RUN pip install dvc
 
+COPY ./.git /python/.git
 COPY ./.dvc/ /python/.dvc
-COPY ./dvc_storage/ /python/dvc_storage
+COPY ./dvc_storage /python/dvc_storage
 COPY ./data.dvc /python/data.dvc
-COPY ./configs/ /python/configs
+COPY ./configs /python/configs
 COPY ./dataset.py /python/dataset.py
 COPY ./model.py /python/model.py
 COPY ./train.py /python/train.py
 
 RUN dvc pull
 
-ENTRYPOINT ["python", "train.py"]
+CMD ["python", "train.py"]
