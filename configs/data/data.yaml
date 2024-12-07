@@ -1,3 +1,3 @@
-data_path: ./data
+data_path: /python/data
 batch_size: 32
 num_workers: 4

@@ -13,7 +13,7 @@ class CustomModel(pl.LightningModule):
             nn.Linear(hidden_size, output_size)
         )
         self.loss = nn.CrossEntropyLoss()
-        self.accuracy = torchmetrics.Accuracy()
+        self.accuracy = torchmetrics.Accuracy(task="MULTICLASS", num_classes=3)
 
     def forward(self, x):
         return self.model(x)
@@ -23,8 +23,8 @@ class CustomModel(pl.LightningModule):
         preds = self(x)
         loss = self.loss(preds, y)
         acc = self.accuracy(preds.softmax(dim=-1), y)
-        self.log("train_loss", loss)
-        self.log("train_acc", acc)
+        self.log("train_loss", loss, on_step=True, on_epoch=True, prog_bar=True)
+        self.log("train_acc", acc, on_step=True, on_epoch=True, prog_bar=True)
         return loss
 
     def validation_step(self, batch, batch_idx):
@@ -32,8 +32,8 @@ class CustomModel(pl.LightningModule):
         preds = self(x)
         loss = self.loss(preds, y)
         acc = self.accuracy(preds.softmax(dim=-1), y)
-        self.log("val_loss", loss)
-        self.log("val_acc", acc)
+        self.log("val_loss", loss, on_step=True, on_epoch=True, prog_bar=True)
+        self.log("val_acc", acc, on_step=True, on_epoch=True, prog_bar=True)
 
     def configure_optimizers(self):
         return torch.optim.Adam(self.parameters(), lr=self.learning_rate)
