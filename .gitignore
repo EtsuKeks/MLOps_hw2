@@ -1,0 +1,6 @@
+.vscode
+swish/__pycache__
+swish/python/bindings.o
+swish/python/swish_binding.cpython-310-x86_64-linux-gnu.so
+swish/src/Swish.o
+/data
